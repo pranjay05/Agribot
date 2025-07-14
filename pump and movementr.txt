@@ -1,0 +1,61 @@
+from gpiozero import Motor
+import time
+import RPi.GPIO as GPIO
+
+# Assuming the motor is connected to the L298N motor driver, and the enable pin is connected to GPIO 17.
+motor1 = Motor(forward=13, backward=19, enable=26)
+motor2 = Motor(forward=24, backward=23, enable=25)
+# Set the maximum duty cycle (100%) for the motor to run at max RPM.
+Motor.enable = True
+
+
+x=input()
+try:
+    if x=='f':
+        while True:
+            # Run the motor forward at max RPM
+            motor1.forward()
+            motor2.forward()
+            time.sleep(2) # Run for 2 seconds
+            
+            
+            
+            # Stop the motor
+            motor1.stop()
+            motor2.stop()
+            
+            time.sleep(3)  # Pause for 5 seconds
+            
+            #pump start
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(17, GPIO.OUT)
+            GPIO.output(17, GPIO.LOW)
+
+            time.sleep(3)
+
+            GPIO.output(17, GPIO.HIGH)
+            #pump stop
+            
+            
+            
+    elif x=='b': 
+        while True:
+            # Run the motor backward at max RPM
+            motor1.backward()
+            motor2.backward()
+            time.sleep(1) # Run for 2 seconds
+            
+            # Stop the motor
+            motor1.stop()
+            motor2.stop()
+            time.sleep(5)  # Pause for 5 seconds
+        
+
+except KeyboardInterrupt:
+    if x=='s':
+        motor1.stop()
+        motor2.stop()
+        Motor.enable = False
+        
+    # If the user interrupts the program, stop the motor and clean up GPIO.
+    
